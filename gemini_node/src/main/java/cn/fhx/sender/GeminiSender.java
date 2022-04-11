@@ -10,7 +10,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: fenghaoxian
@@ -23,7 +25,7 @@ public class GeminiSender {
 
     private final NioEventLoopGroup worker = new NioEventLoopGroup(2);
 
-    private List<Channel> receiverChannels = new ArrayList<>();
+    Map<String,Channel> receiverChannelMap = new HashMap<>();
 
     private final LoggingHandler loggingHandler = new LoggingHandler();
 
@@ -31,11 +33,16 @@ public class GeminiSender {
 
     }
 
-    public Channel getChannel(String ipAddress, int port) {
+    public Channel getChannel(String serviceName) {
         if (bootstrap == null){
             initBootStrap();
         }
-        return bootstrap.bind(ipAddress, port).syncUninterruptibly().channel();
+        // TODO: 2022/4/11 ip地址和端口号应从eureka根据服务名获得
+        String ipAddress = "localhost";
+        int port = 47651;
+        Channel channel = bootstrap.bind(ipAddress, port).syncUninterruptibly().channel();
+
+        return channel;
     }
 
     private void initBootStrap() {
