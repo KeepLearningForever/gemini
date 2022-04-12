@@ -1,0 +1,11 @@
+server:
+  port: 7001    #端口号
+spring:
+  application:
+    name: eureka # 应用名称，会在Eureka中作为服务的id标识（serviceId）
+eureka:
+  client:
+    register-with-eureka: false   #是否将自己注册到Eureka中
+    fetch-registry: false   #是否从eureka中获取其他服务信息
+    service-url:
+      defaultZone: http://localhost:7001/eureka # EurekaServer的地址

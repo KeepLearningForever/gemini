@@ -1,0 +1,13 @@
+server:
+  port: 5052
+
+spring:
+  application:
+    name: receiver #服务的名字,不同的应用，名字不同，如果是集群，名字需要相同
+
+#指定eureka服务地址
+eureka:
+  client:
+    service-url:
+      # EurekaServer的地址
+      defaultZone: http://localhost:7001/eureka

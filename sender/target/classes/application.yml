@@ -1,0 +1,18 @@
+server:
+  port: 5051
+
+spring:
+  application:
+    name: sender #服务的名字,不同的应用，名字不同，如果是集群，名字需要相同
+
+#指定eureka服务地址
+eureka:
+  instance:
+    # 指明使用IP而不是服务名称来注册自身服务。因为Eureka默认是使用域名进行服务注册和解析
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      # EurekaServer的地址
+      defaultZone: http://localhost:7001/eureka

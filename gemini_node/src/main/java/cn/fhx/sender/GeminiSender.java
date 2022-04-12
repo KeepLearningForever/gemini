@@ -9,6 +9,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +29,12 @@ public class GeminiSender {
 
     private final NioEventLoopGroup worker = new NioEventLoopGroup(2);
 
-    private List<Channel> receiverChannels = new ArrayList<>();
+    Map<String,Channel> receiverChannelMap = new HashMap<>();
 
     private final LoggingHandler loggingHandler = new LoggingHandler();
+
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     public void send(Channel channel) {
 
@@ -38,12 +44,20 @@ public class GeminiSender {
         if (bootstrap == null){
             initBootStrap();
         }
+
+        List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
+        ServiceInstance instance = instances.get(0);
         // TODO: 2022/4/11 ip地址和端口号应从eureka根据服务名获得
-        String ipAddress = "localhost";
-        int port = 47651;
+        String ipAddress = instance.getHost();
+        int port = instance.getPort();
         Channel channel = bootstrap.bind(ipAddress, port).syncUninterruptibly().channel();
-        receiverChannels.add(channel);
+        receiverChannelMap.put(serviceName,channel);
         return channel;
+    }
+
+    public static void main(String[] args) {
+        GeminiSender geminiSender = new GeminiSender();
+        geminiSender.getChannel("sender");
     }
 
     private void initBootStrap() {
