@@ -22,6 +22,7 @@ public class Future<T> implements Serializable {
         this.isFinish = true;
     }
 
+    // TODO: 2022/4/12 取不到结果则等待结果至超时
     public T getData() {
         return isFinish ? this.data: null;
     }

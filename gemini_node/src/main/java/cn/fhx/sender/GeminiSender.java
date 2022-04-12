@@ -1,5 +1,6 @@
 package cn.fhx.sender;
 
+import cn.fhx.common.model.Future;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -35,7 +36,9 @@ public class GeminiSender {
         if (bootstrap == null){
             initBootStrap();
         }
-        return bootstrap.bind(ipAddress, port).syncUninterruptibly().channel();
+        Channel channel = bootstrap.bind(ipAddress, port).syncUninterruptibly().channel();
+        receiverChannels.add(channel);
+        return channel;
     }
 
     private void initBootStrap() {

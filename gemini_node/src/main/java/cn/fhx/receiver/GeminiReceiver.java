@@ -27,7 +27,7 @@ public class GeminiReceiver {
         serverBootstrap = new ServerBootstrap()
                 .group(worker)
                 .option(ChannelOption.TCP_NODELAY, true)
-                .option(ChannelOption.SO_BACKLOG, 1)
+                .option(ChannelOption.SO_BACKLOG, 10)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
